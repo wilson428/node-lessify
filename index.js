@@ -1,5 +1,5 @@
 var less = require('less');
-var cleanCSS = require('clean-css');
+var CleanCSS = require('clean-css');
 var through = require('through');
 
 var parser = new(less.Parser)({
@@ -31,7 +31,8 @@ module.exports = function(file) {
 		// http://stackoverflow.com/questions/5989315/regex-for-match-replacing-javascript-comments-both-multiline-and-inline
 		compiled = compiled.replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, "");
 
-		var compiled = cleanCSS.process(compiled);
+
+		var compiled = CleanCSS().minify(compiled);
 
 		compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
 		this.queue(compiled);

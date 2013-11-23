@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 var fs = require("fs");
 var browserify = require('browserify');
 var lessify = require("../index");
-
+var assert = require("assert");
 
 var sampleLESS = __dirname + "/styles.less";
 var sampleCSS = __dirname + "/styles.css";
@@ -13,8 +15,8 @@ b.transform(lessify);
 
 b.bundle(function (err, src) {
 	if (err) {
-		throw err;
+		assert.fail(err);
 	}
-	console.log("LESS and CSS scripts bundled. See " + __dirname + "/test.html");
 	fs.writeFile(__dirname + "/bundle.js", src);
+	assert.ok(src);
 });
