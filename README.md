@@ -7,6 +7,12 @@ When bundling an app using [Browserify](http://browserify.org/), it's often conv
 
 This small script allows you to `require()` your CSS or LESS files as you would any other script.
 
+## Installation
+
+```
+npm install node-lessify
+```
+
 ## Usage
 Write your LESS or CSS files as you normally would, and put them somewhere where your script can find it.
 
@@ -19,7 +25,9 @@ require('./mysite.css');
 
 To compile the stylesheets, pass this module to browserify as a transformation on the command line.
 
-`browserify -t node-lessify script.js > bundle.js`
+```
+browserify -t node-lessify script.js > bundle.js
+```
 
 ## How it works
 
