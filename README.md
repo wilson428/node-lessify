@@ -1,6 +1,8 @@
 node-lessify
 ============
 
+"!https://travis-ci.org/wilson428/node-lessify.png!":https://travis-ci.org/wilson428/node-lessify
+
 LESS precompiler and CSS plugin for Browserify v2. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
 
 When bundling an app using [Browserify](http://browserify.org/), it's often convenient to be able to include your CSS as a script that appends the style declarations to the head. This is particularly relevant for self-assembling apps that attach themselves to a page but otherwise have reserved real-estate on the DOM.
