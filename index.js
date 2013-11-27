@@ -14,7 +14,7 @@ module.exports = function(file) {
 		mydirName = path.dirname(file);
 
 	var parser = new(less.Parser)({
-		paths: [__dirname, mydirName],
+		paths: [mydirName, __dirname],
 		syncImport: true
 	});
 
