@@ -24,7 +24,8 @@
   "dependencies": {
     "through": ">= 2.2.7",
     "less": ">= 1.5.0",
-    "clean-css": "2.0.2"
+    "clean-css": "2.0.2",
+    "path": "*"
   },
   "devDependencies": {
     "browserify": ">= 2.0.0"
