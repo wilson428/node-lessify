@@ -1,0 +1,9 @@
+{
+    "name": "lessify-test",
+    "browserify": {
+        "transform": ["node-lessify"],
+        "transform-options": {
+        	"node-lessify": "textMode"
+        }
+    }
+}

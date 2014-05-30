@@ -17,6 +17,5 @@ b.bundle(function (err, src) {
 	if (err) {
 		assert.fail(err);
 	}
-	fs.writeFile(__dirname + "/bundle.js", src);
 	assert.ok(src);
 });
