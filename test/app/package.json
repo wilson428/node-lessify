@@ -1,10 +1,6 @@
 {
     "name": "lessify-test",
-    "dependencies": {
-    	"node-lessify": "../../index"
-    },
     "browserify": {
-        "transform": ["node-lessify"],
         "transform-options": {
         	"node-lessify": "textMode"
         }
