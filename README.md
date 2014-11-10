@@ -1,6 +1,8 @@
-node-lessify [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
+node-lessify 
 ============
-Version 0.0.4a
+Version 0.0.5
+
+[![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
 
 LESS precompiler and CSS plugin for Browserify v2. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
 
