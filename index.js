@@ -1,9 +1,8 @@
-// v0.0.4
+// v0.0.6
 
-var less = require('less');
-var CleanCSS = require('clean-css');
-var through = require('through');
 var path = require("path");
+var through = require('through2');
+var less = require('less');
 
 var textMode = false,
 	func_start = "(function() { var head = document.getElementsByTagName('head')[0]; style = document.createElement('style'); style.type = 'text/css';",
@@ -15,6 +14,19 @@ try {
 	var options = {};
 };
 
+/*
+you can pass options to the transform from your package.json file like so: 
+    "browserify": {
+        "transform-options": {
+        	"node-lessify": "textMode"
+        }
+    }
+*/
+
+/*
+textMode simply compiles the LESS into a single string of CSS and passes it back without adding the code that automatically appends that CSS to the page
+*/
+
 if (options.browserify && options.browserify["transform-options"] && options.browserify["transform-options"]["node-lessify"] == "textMode") {
 	textMode = true;
 }
@@ -23,37 +35,39 @@ module.exports = function(file) {
 	if (!/\.css$|\.less$/.test(file)) {
 		return through();
 	}
-	var buffer = "",
-		mydirName = path.dirname(file);
 
-	var parser = new(less.Parser)({
-		paths: [mydirName, __dirname],
-		syncImport: true
-	});
+	var buffer = "", mydirName = path.dirname(file);
 
-	return through(function(chunk) {
-    	return buffer += chunk.toString();
-  	}, function() {
+	return through(write, end);
 
-  		var compiled;
+    function write(chunk, enc, next) {
+        buffer += chunk.toString();
+        next();
+    }
 
-  		// CSS is LESS so no need to check extension
-		parser.parse(buffer, function(e, r) { 
-			compiled = r.toCSS();
-		});
+	function end(done) {
+        var self = this;
 
-		// rv comments
-		// http://stackoverflow.com/questions/5989315/regex-for-match-replacing-javascript-comments-both-multiline-and-inline
-		compiled = compiled.replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, "");
+        try {
+	  		// CSS is LESS so no need to check extension
+			less.render(buffer, { 
+				paths: [".", mydirName],
+				compress: true
+			}, function(e, output) { 
+				compiled = output.css; 
+				if (textMode) {
+		            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
+				} else {
+					compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
+				}
 
-		var compiled = CleanCSS().minify(compiled);
-
-		if (textMode) {
-            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
-		} else {
-			compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
-		}
-		this.queue(compiled);
-		return this.queue(null);
-	});
+				self.push(compiled);
+	            self.push(null);
+				done();
+			}); 
+		} catch (error) {
+			self.emit('error', (error instanceof Error) ? error : new Error(error));
+			done();
+        }
+	}
 };
