@@ -48,26 +48,28 @@ module.exports = function(file) {
 	function end(done) {
         var self = this;
 
-        try {
-	  		// CSS is LESS so no need to check extension
-			less.render(buffer, { 
-				paths: [".", mydirName],
-				compress: true
-			}, function(e, output) { 
-				compiled = output.css; 
-				if (textMode) {
-		            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
-				} else {
-					compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
-				}
-
-				self.push(compiled);
-	            self.push(null);
+  		// CSS is LESS so no need to check extension
+		less.render(buffer, { 
+			paths: [".", mydirName],
+			compress: true
+		}, function(e, output) { 		
+			if (e) {
+				console.error("node-lessify encountered an error when compiling the following file:", file);
+				console.error("The error message reads:", e.message);
+				self.emit('error');
 				done();
-			}); 
-		} catch (error) {
-			self.emit('error', (error instanceof Error) ? error : new Error(error));
+			}
+
+			compiled = output.css; 
+			if (textMode) {
+	            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
+			} else {
+				compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
+			}
+
+			self.push(compiled);
+            self.push(null);
 			done();
-        }
+		}); 
 	}
 };
