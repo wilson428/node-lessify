@@ -1,4 +1,4 @@
-// v0.0.6
+// v0.0.8
 
 var path = require("path");
 var through = require('through2');
@@ -54,9 +54,23 @@ module.exports = function(file) {
 			compress: true
 		}, function(e, output) { 		
 			if (e) {
-				console.error("node-lessify encountered an error when compiling the following file:", file);
-				console.error("The error message reads:", e.message);
-				self.emit('error');
+				var msg = e.message;
+				if (e.line) {
+					msg += ", line " + e.line;
+				}
+				if (e.column) {
+					msg += ", column " + e.column;
+				}
+				if (e.extract) {
+					msg += ": \"" + e.extract + "\"";
+				}
+
+				console.error("node-lessify encountered an error when compiling", file);
+				console.error("Error: ", msg);
+
+				throw new Error(msg, file, e.line);
+
+				//self.emit('error');
 				done();
 			}
 

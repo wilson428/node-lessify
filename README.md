@@ -1,6 +1,6 @@
 node-lessify 
 ============
-Version 0.0.7
+Version 0.0.8
 
 [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
 
@@ -52,5 +52,7 @@ LESS allows one to ```@import``` other LESS files. This module synchronously imp
 See the dummy app in the [test directory](/test) for an example of this in action.
 
 ## Changes
+
+**v0.0.8**: More useful error statements with line and column numbers
 
 **v0.0.7**: Now throws an error instead of failing silently if there's bad LESS, per [Issue #8](https://github.com/wilson428/node-lessify/issues/8)
