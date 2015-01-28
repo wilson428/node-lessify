@@ -1,6 +1,6 @@
 node-lessify 
 ============
-Version 0.0.8
+Version 0.0.9
 
 [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
 
