@@ -1,11 +1,11 @@
-// v0.0.8
+// v0.0.9
 
 var path = require("path");
 var through = require('through2');
 var less = require('less');
 
 var textMode = false,
-	func_start = "(function() { var head = document.getElementsByTagName('head')[0]; style = document.createElement('style'); style.type = 'text/css';",
+	func_start = "(function() { var head = document.getElementsByTagName('head')[0]; var style = document.createElement('style'); style.type = 'text/css';",
 	func_end = "if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style);}())"; 
 
 try {
