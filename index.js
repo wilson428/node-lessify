@@ -50,8 +50,6 @@ module.exports = function(file, package_options) {
 		}
 	}
 
-	console.error(package_options);
-
 	var buffer = "", mydirName = path.dirname(file);
 
 	return through(write, end);
@@ -81,17 +79,11 @@ module.exports = function(file, package_options) {
 					msg += ": \"" + e.extract + "\"";
 				}
 
-				console.error("node-lessify encountered an error when compiling", file);
-				console.error("Error: ", msg);
-
-				throw new Error(msg, file, e.line);
-
-				//self.emit('error');
-				done();
+				done(new Error(msg, file, e.line));
 			}
 
 			compiled = output.css; 
-			if (textMode) {
+			if (textMode || package_options.textMode) {
 	            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
 			} else {
 				compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
