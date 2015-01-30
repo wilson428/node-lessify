@@ -91,7 +91,7 @@ module.exports = function(file, package_options) {
 			}
 
 			compiled = output.css; 
-			if (textMode) {
+			if (textMode || package_options.textMode) {
 	            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
 			} else {
 				compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
