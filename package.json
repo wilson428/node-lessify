@@ -18,17 +18,19 @@
     "browserify-transform"
   ],
   "author": {
-    "name" : "Chris Wilson",
-    "email" : "wilson@mechanicalscribe.com",
-    "url" : "http://mechanicalscribe.com"
+    "name": "Chris Wilson",
+    "email": "wilson@mechanicalscribe.com",
+    "url": "http://mechanicalscribe.com"
   },
   "license": "MIT",
   "dependencies": {
-    "through2": "0.6.x",
-    "less": "2.0.x"
+    "less": "2.4.x",
+    "object-assign": "^2.0.0",
+    "through2": "0.6.x"
   },
   "devDependencies": {
-    "browserify": "8.x.x"
+    "browserify": "8.x.x",
+    "less-plugin-autoprefix": "^1.3.0"
   },
   "bugs": {
     "url": "https://github.com/wilson428/node-lessify/issues"
