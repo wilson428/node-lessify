@@ -1,4 +1,4 @@
-// v0.0.9
+// v0.0.9a
 
 var path = require("path");
 var through = require('through2');
@@ -68,8 +68,8 @@ module.exports = function(file, package_options) {
 			paths: [".", mydirName],
 			compress: true
 		}, {
-                  plugins: package_options.plugins ? package_options.plugins : undefined
-                }), function(e, output) { 		
+            plugins: package_options.plugins ? package_options.plugins : undefined
+        }), function(e, output) { 		
 			if (e) {
 				var msg = e.message;
 				if (e.line) {
