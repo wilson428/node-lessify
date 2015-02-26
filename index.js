@@ -3,6 +3,7 @@
 var path = require("path");
 var through = require('through2');
 var less = require('less');
+var assign = require('object-assign');
 
 var textMode = false,
 	func_start = "(function() { var head = document.getElementsByTagName('head')[0]; var style = document.createElement('style'); style.type = 'text/css';",
@@ -63,10 +64,12 @@ module.exports = function(file, package_options) {
         var self = this;
 
   		// CSS is LESS so no need to check extension
-		less.render(buffer, { 
+		less.render(buffer, assign({ 
 			paths: [".", mydirName],
 			compress: true
-		}, function(e, output) { 		
+		}, {
+                  plugins: package_options.plugins ? package_options.plugins : undefined
+                }), function(e, output) { 		
 			if (e) {
 				var msg = e.message;
 				if (e.line) {
