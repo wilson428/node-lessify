@@ -1,6 +1,6 @@
 node-lessify 
 ============
-Version 0.0.9a
+Version 0.0.9b
 
 [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
 
@@ -39,21 +39,20 @@ The stylesheets are compiled (in the case of LESS), minified, and bundle into a 
 ## Imports
 LESS allows one to ```@import``` other LESS files. This module synchronously imports those dependencies at the time of the bundling. It looks for the imported files in both the directory of the parent file and the folder where the module itself lives, so it should work so long as the paths in the ```@import``` commands are correct relative to the importing file, as usual. It is not currently tested for recursive importing.
 
-##Options
+## Options
 
-###Text Mode
+### Text Mode
 [As requested](https://github.com/wilson428/node-lessify/issues/1), it is now possible to ask the transformation not to auto-append the css but merely to compile it into a string and assign it to a variable. This is accomplished by adding a `package.json` file in the directory from which browserify is run with the following properties:
 
     "browserify": {
-        "transform": ["node-lessify"],
-        "transform-options": {
-        	"node-lessify": "textMode"
-        }
+        "transform": [
+            [ "node-lessify", {"textMode": true } ]
+        ]
     }
 
 See the dummy app in the [test directory](/test) for an example of this in action.
 
-###Plugins
+### Plugins
 You can pass a `plugins` argument to get less plugins like [autoprefix](https://www.npmjs.com/package/less-plugin-autoprefix):
 
 For example (from [test.js](test/test.js)):
@@ -64,8 +63,11 @@ For example (from [test.js](test/test.js)):
 	var b = browserify(sampleLESS);
 	b.transform(lessify, {plugins: [autoprefix] });
 
+Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
 ## Changes
+
+**v0.0.9b**: README fixes
 
 **v0.0.9a**: Allow for less plugins. Thx @henriklundgren!
 
