@@ -87,9 +87,9 @@ module.exports = function(file, package_options) {
 
 			compiled = output.css; 
 			if (textMode || package_options.textMode) {
-	            compiled = "module.exports = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";";
+	            compiled = "module.exports = " + JSON.stringify(compiled) + ";";
 			} else {
-				compiled = func_start + "var css = \"" + compiled.replace(/'/g, "\\'").replace(/"/g, '\\"') + "\";" + func_end;
+				compiled = func_start + "var css = " + JSON.stringify(compiled) + ";" + func_end;
 			}
 
 			self.push(compiled);
