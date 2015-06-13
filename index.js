@@ -82,7 +82,7 @@ module.exports = function(file, package_options) {
 					msg += ": \"" + e.extract + "\"";
 				}
 
-				done(new Error(msg, file, e.line));
+				return done(new Error(msg, file, e.line));
 			}
 
 			compiled = output.css; 
