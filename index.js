@@ -94,6 +94,11 @@ module.exports = function(file, package_options) {
 
 			self.push(compiled);
             self.push(null);
+
+			output.imports.forEach(function(f) {
+				self.emit('file', f);
+			});
+
 			done();
 		}); 
 	}
