@@ -1,10 +1,10 @@
 node-lessify 
 ============
-Version 0.0.11
+Version 0.1.1
 
 [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
 
-LESS 2.0 precompiler and CSS plugin for Browserify v2. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
+LESS 2.0 precompiler and CSS plugin for Browserify. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
 
 When bundling an app using [Browserify](http://browserify.org/), it's often convenient to be able to include your CSS as a script that appends the style declarations to the head. This is particularly relevant for self-assembling apps that attach themselves to a page but otherwise have reserved real-estate on the DOM.
 
@@ -66,6 +66,8 @@ For example (from [test.js](test/test.js)):
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
 ## Changes
+**v0.1.1**: Updated dependencies
+
 **v0.0.11**: Watchify support. Thx, @jiaweihli!
 
 **v0.0.10**: Supports backslashes in CSS. Thx, @BernieSumption!
