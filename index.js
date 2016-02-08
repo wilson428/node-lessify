@@ -15,26 +15,27 @@ var defaultOptions = {
 };
 
 /*
-  you can pass options to the transform from your package.json file like so:
+ you can pass options to the transform from your package.json file like so:
 
-		"browserify": {
-				"transform-options": {
-					"node-lessify": "textMode"
-				}
-		}
+ "browserify": {
+ "transform-options": {
+ "node-lessify": "textMode"
+ }
+ }
 
-	NOTE: This is deprecated since it is now possible to do this like so:
+ NOTE: This is deprecated since it is now possible to do this like so:
 
-		"browserify": {
-			"transform": [
-				[ "node-lessify", { "textMode": true } ]
-			]
-		}
-*/
+ "browserify": {
+ "transform": [
+ [ "node-lessify", { "textMode": true } ]
+ ]
+ }
+ */
 
+var currentWorkingDir = process.cwd();
 var packageConfig;
 try {
-	packageConfig = require(process.cwd() + "/package.json");
+	packageConfig = require(currentWorkingDir + "/package.json");
 } catch (e) {
 	packageConfig = undefined;
 }
@@ -96,7 +97,14 @@ module.exports = function (file, transformOptions) {
 				return done(new Error(msg, file, err.line));
 			}
 
-			var compiled = JSON.stringify(output.css);
+			// small hack to output the file path of the LESS source file
+			// so that we can differentiate
+			var compiled = JSON.stringify(
+				output.css +
+				(curTransformOptions.appendLessSourceUrl ?
+				'/*# sourceURL=' + path.relative(currentWorkingDir, file).replace(/\\/g, '/') + ' */' : '')
+			);
+
 			if (curTransformOptions.textMode) {
 				compiled = "module.exports = " + compiled + ";";
 			} else {
