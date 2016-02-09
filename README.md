@@ -66,7 +66,11 @@ For example (from [test.js](test/test.js)):
 	var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
 
 	var b = browserify(sampleLESS);
-	b.transform(lessify, {plugins: [autoprefix] });
+	b.transform(lessify, {
+		compileOptions: {
+			plugins: [autoprefix] 
+		}
+	});
 
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
