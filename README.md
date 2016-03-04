@@ -52,6 +52,11 @@ LESS allows one to ```@import``` other LESS files. This module synchronously imp
 
 See the dummy app in the [test directory](/test) for an example of this in action.
 
+### Append Less file source URL
+As a workaround to LESS source map issues (e.g. css style lines not referring to the correct LESS file), we can output 
+ only the source LESS file name for each require() call of a LESS file. This will at least allow us to distinguish 
+ STYLE elements. 
+
 ### Plugins
 You can pass a `plugins` argument to get less plugins like [autoprefix](https://www.npmjs.com/package/less-plugin-autoprefix):
 
@@ -61,7 +66,11 @@ For example (from [test.js](test/test.js)):
 	var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
 
 	var b = browserify(sampleLESS);
-	b.transform(lessify, {plugins: [autoprefix] });
+	b.transform(lessify, {
+		compileOptions: {
+			plugins: [autoprefix] 
+		}
+	});
 
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 

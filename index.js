@@ -5,101 +5,120 @@ var through = require('through2');
 var less = require('less');
 var assign = require('object-assign');
 
-var textMode = false,
-	func_start = "(function() { var head = document.getElementsByTagName('head')[0]; var style = document.createElement('style'); style.type = 'text/css';",
-	func_end = "if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style);}())"; 
+var func_start = "(function() { var head = document.getElementsByTagName('head')[0]; var style = document.createElement('style'); style.type = 'text/css';",
+	func_end = "if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style);}())";
 
-/*
-you can pass options to the transform from your package.json file like so: 
-    "browserify": {
-        "transform-options": {
-        	"node-lessify": "textMode"
-        }
-    }
-	NOTE: This is deprecated since it is now possible to do this like so:
-
-    "browserify": {
-		"transform": [
-			[ "node-lessify", { "textMode": true } ]
-		]
+var defaultOptions = {
+	compileOptions: {
+		compress: true
 	}
-*/
-
-try {
-	var options = require(process.cwd() + "/package.json");
-} catch (e) {
-	var options = {};
 };
 
 /*
-textMode simply compiles the LESS into a single string of CSS and passes it back without adding the code that automatically appends that CSS to the page
-*/
+ you can pass options to the transform from your package.json file like so:
 
-if (options.browserify && options.browserify["transform-options"] && options.browserify["transform-options"]["node-lessify"] == "textMode") {
-	textMode = true;
+ "browserify": {
+ "transform-options": {
+ "node-lessify": "textMode"
+ }
+ }
+
+ NOTE: This is deprecated since it is now possible to do this like so:
+
+ "browserify": {
+ "transform": [
+ [ "node-lessify", { "textMode": true } ]
+ ]
+ }
+ */
+
+var currentWorkingDir = process.cwd();
+var packageConfig;
+try {
+	packageConfig = require(currentWorkingDir + "/package.json");
+} catch (e) {
+	packageConfig = undefined;
 }
 
-module.exports = function(file, package_options) {
+/*
+ textMode simply compiles the LESS into a single string of CSS and passes it back without adding the code that automatically appends that CSS to the page
+ */
+
+var packagePluginOptions = packageConfig &&
+	packageConfig.browserify &&
+	packageConfig.browserify["transform-packageConfig"] &&
+	packageConfig.browserify["transform-packageConfig"]["node-lessify"];
+
+
+module.exports = function (file, transformOptions) {
 	if (!/\.css$|\.less$/.test(file)) {
 		return through();
 	}
 
-	// supplement options with those from package
-	for (var key in package_options) {
-		if (package_options.hasOwnProperty(key) && key !== "_flags") {
-			options[key] = package_options[key];
-		}
-	}
+	// set the curTransformOptions using the given plugin options
+	var curTransformOptions = assign({}, defaultOptions, packagePluginOptions || {}, transformOptions || {});
+	curTransformOptions._flags = undefined; // clear out the _flag property
 
-	var buffer = "", mydirName = path.dirname(file);
+
+	var buffer = "",
+		myDirName = path.dirname(file);
+
+	var compileOptions = assign({}, curTransformOptions.compileOptions || {}, {
+		paths: [".", myDirName] // override the "paths" property
+	});
 
 	return through(write, end);
 
-    function write(chunk, enc, next) {
-        buffer += chunk.toString();
-        next();
-    }
+	function write(chunk, enc, next) {
+		buffer += chunk.toString();
+		next();
+	}
 
 	function end(done) {
-        var self = this;
+		var self = this;
 
-  		// CSS is LESS so no need to check extension
-		less.render(buffer, assign({ 
-			paths: [".", mydirName],
-			compress: true
-		}, {
-            plugins: package_options.plugins ? package_options.plugins : undefined
-        }), function(e, output) { 		
-			if (e) {
-				var msg = e.message;
-				if (e.line) {
-					msg += ", line " + e.line;
+		//DEBUG
+		//console.log('compileOptions = ', compileOptions);
+
+		// CSS is LESS so no need to check extension
+		less.render(buffer, compileOptions, function (err, output) {
+			if (err) {
+				var msg = err.message;
+				if (err.line) {
+					msg += ", line " + err.line;
 				}
-				if (e.column) {
-					msg += ", column " + e.column;
+				if (err.column) {
+					msg += ", column " + err.column;
 				}
-				if (e.extract) {
-					msg += ": \"" + e.extract + "\"";
+				if (err.extract) {
+					msg += ": \"" + err.extract + "\"";
 				}
 
-				return done(new Error(msg, file, e.line));
+				return done(new Error(msg, file, err.line));
 			}
 
-			compiled = output.css; 
-			if (textMode || package_options.textMode) {
-	            compiled = "module.exports = " + JSON.stringify(compiled) + ";";
+			// small hack to output the file path of the LESS source file
+			// so that we can differentiate
+			var compiled = JSON.stringify(
+				output.css +
+				(curTransformOptions.appendLessSourceUrl ?
+				'/*# sourceURL=' + path.relative(currentWorkingDir, file).replace(/\\/g, '/') + ' */' : '')
+			);
+
+			if (curTransformOptions.textMode) {
+				compiled = "module.exports = " + compiled + ";";
 			} else {
-				compiled = func_start + "var css = " + JSON.stringify(compiled) + ";" + func_end;
+				compiled = func_start + "var css = " + compiled + ";" + func_end;
 			}
 
 			self.push(compiled);
-            self.push(null);
+			self.push(null);
 
-			output.imports.forEach(function(f) {
+			output.imports.forEach(function (f) {
 				self.emit('file', f);
 			});
 
 			done();
-		}); 
+		});
 	}
 };
