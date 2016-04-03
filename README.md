@@ -1,9 +1,10 @@
 node-lessify 
 ============
-Version 0.1.3
+Version 0.1.4
 
 [![Build Status](https://travis-ci.org/wilson428/node-lessify.png)](https://travis-ci.org/wilson428/node-lessify)
-[![Dependency Status](https://david-dm.org/wilson428/node-lessify.svg)](https://david-dm.org/TimeMagazine/time-interactive)
+[![Dependency Status](https://david-dm.org/wilson428/node-lessify.svg)](https://david-dm.org/wilson428/node-lessify)
+[![devDependencies](https://david-dm.org/wilson428/node-lessify/dev-status.svg)](https://david-dm.org/wilson428/node-lessify#info=devDependencies)
 
 LESS 2.0 precompiler and CSS plugin for Browserify. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
 
@@ -76,7 +77,7 @@ For example (from [test.js](test/test.js)):
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
 ## Changes
-**v0.1.3**: Had wrong dependency badge
+**v0.1.3, v0.1.4**: Added badges
 
 **v0.1.2**: Updated dependencies
 
