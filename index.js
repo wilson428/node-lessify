@@ -67,6 +67,12 @@ module.exports = function (file, transformOptions) {
 	var compileOptions = assign({}, curTransformOptions.compileOptions || {});
 	compileOptions.paths = [].concat(compileOptions.paths || [], [".", myDirName]);
 
+	if (transformOptions.globalPaths) {
+		transformOptions.globalPaths.forEach(function(path) {
+			compileOptions.paths.push(path);
+		});
+	}
+
 	return through(write, end);
 
 	function write(chunk, enc, next) {
