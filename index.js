@@ -64,8 +64,14 @@ module.exports = function (file, transformOptions) {
 		myDirName = path.dirname(file);
 
 	var compileOptions = assign({}, curTransformOptions.compileOptions || {}, {
-		paths: [".", myDirName] // override the "paths" property
+		paths: [".", myDirName], // override the "paths" property
 	});
+
+	if (transformOptions.globalPaths) {
+		transformOptions.globalPaths.forEach(function(path) {
+			compileOptions.paths.push(path);
+		});
+	}
 
 	return through(write, end);
 
