@@ -81,9 +81,7 @@ Pass a `globalPaths` option to append search paths to `less.render`.  These path
 
 	var b = browserify(sampleLESS);
 	b.transform(lessify, {
-		globalPaths: {
-			paths: [`${__dirname}/myproject/src/globals`],
-		}
+		globalPaths: [`${__dirname}/myproject/src/globals`],
 	});
 
 So we can now just do simple includes in any of our less files
