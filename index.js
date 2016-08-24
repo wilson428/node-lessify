@@ -64,7 +64,7 @@ module.exports = function (file, transformOptions) {
 		myDirName = path.dirname(file);
 
 	var compileOptions = assign({}, curTransformOptions.compileOptions || {});
-	compileOptions.paths = [].concat(compileOptions.paths || [".", myDirName]);
+	compileOptions.paths = [].concat(compileOptions.paths || [], [".", myDirName]);
 
 	return through(write, end);
 
