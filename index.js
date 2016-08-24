@@ -63,9 +63,8 @@ module.exports = function (file, transformOptions) {
 	var buffer = "",
 		myDirName = path.dirname(file);
 
-	var compileOptions = assign({}, curTransformOptions.compileOptions || {}, {
-		paths: [".", myDirName] // override the "paths" property
-	});
+	var compileOptions = assign({}, curTransformOptions.compileOptions || {});
+	compileOptions.paths = [].concat(compileOptions.paths || [".", myDirName]);
 
 	return through(write, end);
 
