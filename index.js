@@ -15,22 +15,22 @@ var defaultOptions = {
 };
 
 /*
- you can pass options to the transform from your package.json file like so:
+you can pass options to the transform from your package.json file like so:
 
- "browserify": {
- "transform-options": {
- "node-lessify": "textMode"
- }
- }
+"browserify": {
+	"transform-options": {
+		"node-lessify": "textMode"
+	}
+}
 
- NOTE: This is deprecated since it is now possible to do this like so:
+NOTE: This is deprecated since it is now possible to do this like so:
 
- "browserify": {
- "transform": [
- [ "node-lessify", { "textMode": true } ]
- ]
- }
- */
+"browserify": {
+	"transform": [
+		[ "node-lessify", { "textMode": true } ]
+	]
+}
+*/
 
 var currentWorkingDir = process.cwd();
 var packageConfig;
@@ -41,8 +41,9 @@ try {
 }
 
 /*
- textMode simply compiles the LESS into a single string of CSS and passes it back without adding the code that automatically appends that CSS to the page
- */
+textMode simply compiles the LESS into a single string of CSS and passes it back without adding the
+code that automatically appends that CSS to the page
+*/
 
 var packagePluginOptions = packageConfig &&
 	packageConfig.browserify &&
@@ -77,48 +78,46 @@ module.exports = function (file, transformOptions) {
 	function end(done) {
 		var self = this;
 
-		//DEBUG
-		//console.log('compileOptions = ', compileOptions);
-
 		// CSS is LESS so no need to check extension
-		less.render(buffer, compileOptions, function (err, output) {
-			if (err) {
-				var msg = err.message;
-				if (err.line) {
-					msg += ", line " + err.line;
+		less.render(buffer, compileOptions,
+			function (err, output) {
+				if (err) {
+					var msg = err.message;
+					if (err.line) {
+						msg += ", line " + err.line;
+					}
+					if (err.column) {
+						msg += ", column " + err.column;
+					}
+					if (err.extract) {
+						msg += ": \"" + err.extract + "\"";
+					}
+
+					return done(new Error(msg, file, err.line));
 				}
-				if (err.column) {
-					msg += ", column " + err.column;
+
+				// small hack to output the file path of the LESS source file
+				// so that we can differentiate
+				var compiled = JSON.stringify(
+					output.css +
+					(curTransformOptions.appendLessSourceUrl ?
+					'/*# sourceURL=' + path.relative(currentWorkingDir, file).replace(/\\/g, '/') + ' */' : '')
+				);
+
+				if (curTransformOptions.textMode) {
+					compiled = "module.exports = " + compiled + ";";
+				} else {
+					compiled = func_start + "var css = " + compiled + ";" + func_end;
 				}
-				if (err.extract) {
-					msg += ": \"" + err.extract + "\"";
-				}
 
-				return done(new Error(msg, file, err.line));
-			}
+				self.push(compiled);
+				self.push(null);
 
-			// small hack to output the file path of the LESS source file
-			// so that we can differentiate
-			var compiled = JSON.stringify(
-				output.css +
-				(curTransformOptions.appendLessSourceUrl ?
-				'/*# sourceURL=' + path.relative(currentWorkingDir, file).replace(/\\/g, '/') + ' */' : '')
-			);
+				output.imports.forEach(function (f) {
+					self.emit('file', f);
+				});
 
-			if (curTransformOptions.textMode) {
-				compiled = "module.exports = " + compiled + ";";
-			} else {
-				compiled = func_start + "var css = " + compiled + ";" + func_end;
-			}
-
-			self.push(compiled);
-			self.push(null);
-
-			output.imports.forEach(function (f) {
-				self.emit('file', f);
-			});
-
-			done();
+				done();
 		});
 	}
 };
