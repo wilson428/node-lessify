@@ -79,23 +79,8 @@ module.exports = function (file, transformOptions) {
 		var self = this;
 
 		// CSS is LESS so no need to check extension
-		less.render(buffer, compileOptions,
-			function (err, output) {
-				if (err) {
-					var msg = err.message;
-					if (err.line) {
-						msg += "on " + err.line;
-					}
-					if (err.column) {
-						msg += ":" + err.column;
-					}
-					if (err.extract) {
-						msg += "\n \"" + err.extract + "\"";
-					}
-
-					return done(new Error(msg, file, err.line));
-				}
-
+		less.render(buffer, compileOptions).then(
+			function(output) {
 				// small hack to output the file path of the LESS source file
 				// so that we can differentiate
 				var compiled = JSON.stringify(
@@ -113,11 +98,31 @@ module.exports = function (file, transformOptions) {
 				self.push(compiled);
 				self.push(null);
 
+				// emit change event for watchers
 				output.imports.forEach(function (f) {
 					self.emit('file', f);
 				});
 
 				done();
+			},
+			function (err, output) {
+				if (err) {
+					var msg = err.message;
+					if (err.line) {
+						msg += "on " + err.line;
+					}
+					if (err.column) {
+						msg += ":" + err.column;
+					}
+					if (err.extract) {
+						msg += "\n \"" + err.extract + "\"";
+					}
+
+					done(new Error(msg, file, err.line));
+					self.emit('file', err.filename);
+				}
+
+
 		});
 	}
 };
