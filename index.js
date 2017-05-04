@@ -84,13 +84,13 @@ module.exports = function (file, transformOptions) {
 				if (err) {
 					var msg = err.message;
 					if (err.line) {
-						msg += ", line " + err.line;
+						msg += "on " + err.line;
 					}
 					if (err.column) {
-						msg += ", column " + err.column;
+						msg += ":" + err.column;
 					}
 					if (err.extract) {
-						msg += ": \"" + err.extract + "\"";
+						msg += "\n \"" + err.extract + "\"";
 					}
 
 					return done(new Error(msg, file, err.line));
