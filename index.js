@@ -108,13 +108,13 @@ module.exports = function (file, transformOptions) {
 				if (err) {
 					var msg = err.message;
 					if (err.line) {
-						msg += "on " + err.line;
+						msg += " on " + err.line;
 					}
 					if (err.column) {
 						msg += ":" + err.column;
 					}
 					if (err.extract) {
-						msg += "\n \"" + err.extract + "\"";
+						msg += "\n" + err.extract + "\n";
 					}
 
 					done(new Error(msg, file, err.line));
