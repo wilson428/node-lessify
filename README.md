@@ -43,8 +43,6 @@ LESS allows one to ```@import``` other LESS files. This module synchronously imp
 
 ## Options
 
-### Compile Options
-
 
 ### Text Mode
 [As requested](https://github.com/wilson428/node-lessify/issues/1), it is now possible to ask the transformation not to auto-append the css but merely to compile it into a string and assign it to a variable. This is accomplished by adding a `package.json` file in the directory from which browserify is run with the following properties:
@@ -64,7 +62,9 @@ As a workaround to LESS source map issues (e.g. css style lines not referring to
  only the source LESS file name for each require() call of a LESS file. This will at least allow us to distinguish
  STYLE elements.
 
-### Plugins
+### Compile Options
+
+#### Plugins
 You can pass a `plugins` argument to get less plugins like [autoprefix](https://www.npmjs.com/package/less-plugin-autoprefix):
 
 For example (from [test.js](test/test.js)):
@@ -83,14 +83,14 @@ b.transform(lessify, {
 
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
-### Paths
+#### Paths
 Pass a `paths` option to compileOptions to append search paths to `less.render`.  These paths will be searched for any `@import` calls.
 
 ```
 var b = browserify(sampleLESS);
 b.transform(lessify, {
 	compileOptions: {
-		globalPaths: [`${__dirname}/myproject/src/globals`],
+		paths: [`${__dirname}/myproject/src/globals`],
 	}
 });
 ```
@@ -104,7 +104,7 @@ So we can now just do simple includes in any of our less files
 ## Changes
 
 **v0.1.5**:
-- Added support for (global) path specification (thx @relay-delivery)	
+- Added support for (global) path specification (thx @relay-delivery)
 - Stopped overriding paths for more robust `@includes` (thx @lordvlad)
 - Improved Watchify support for error handling.
 
