@@ -107,6 +107,7 @@ So we can now just do simple includes in any of our less files
 - Added support for (global) path specification (thx @relay-delivery)
 - Stopped overriding paths for more robust `@includes` (thx @lordvlad)
 - Improved Watchify support for error handling.
+- Updated error log messages for legibility/brevity
 
 **v0.1.3, v0.1.4**: Added badges
 
