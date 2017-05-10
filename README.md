@@ -49,11 +49,13 @@ LESS allows one to ```@import``` other LESS files. This module synchronously imp
 ### Text Mode
 [As requested](https://github.com/wilson428/node-lessify/issues/1), it is now possible to ask the transformation not to auto-append the css but merely to compile it into a string and assign it to a variable. This is accomplished by adding a `package.json` file in the directory from which browserify is run with the following properties:
 
-		"browserify": {
-				"transform": [
-						[ "node-lessify", {"textMode": true } ]
-				]
-		}
+```
+"browserify": {
+	"transform": [
+		[ "node-lessify", {"textMode": true } ]
+	]
+}
+```
 
 See the dummy app in the [test directory](/test) for an example of this in action.
 
@@ -67,42 +69,44 @@ You can pass a `plugins` argument to get less plugins like [autoprefix](https://
 
 For example (from [test.js](test/test.js)):
 
-	var LessPluginAutoPrefix = require('less-plugin-autoprefix');
-	var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
+```
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
 
-	var b = browserify(sampleLESS);
-	b.transform(lessify, {
-		compileOptions: {
-			plugins: [autoprefix]
-		}
-	});
+var b = browserify(sampleLESS);
+b.transform(lessify, {
+	compileOptions: {
+		plugins: [autoprefix]
+	}
+});
+```
 
 Note: This does not currently work via `package.json` arguments, since the plugins need to be required separately, but we're working on it.
 
 ### Paths
 Pass a `paths` option to compileOptions to append search paths to `less.render`.  These paths will be searched for any `@import` calls.
 
-	var b = browserify(sampleLESS);
-	b.transform(lessify, {
-		compileOptions: {
-			globalPaths: [`${__dirname}/myproject/src/globals`],
-		}
-	});
+```
+var b = browserify(sampleLESS);
+b.transform(lessify, {
+	compileOptions: {
+		globalPaths: [`${__dirname}/myproject/src/globals`],
+	}
+});
+```
 
 So we can now just do simple includes in any of our less files
 
-`src/my/really/long/path/file.less`:
-
-	@import colors.less; // Will look for myproject/src/globals/colors.less
+`@import colors.less; // Will look for myproject/src/globals/colors.less`
 
 
 
 ## Changes
 
 **v0.1.5**:
-	- Added support for (global) path specification (thx @relay-delivery)
-	- Stopped overriding paths for more robust `@includes` (thx @lordvlad)
-	- Improved Watchify support for error handling.
+- Added support for (global) path specification (thx @relay-delivery)	
+- Stopped overriding paths for more robust `@includes` (thx @lordvlad)
+- Improved Watchify support for error handling.
 
 **v0.1.3, v0.1.4**: Added badges
 
