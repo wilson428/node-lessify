@@ -6,7 +6,7 @@ Version 0.1.5
 [![Dependency Status](https://david-dm.org/wilson428/node-lessify.svg)](https://david-dm.org/wilson428/node-lessify)
 [![devDependencies](https://david-dm.org/wilson428/node-lessify/dev-status.svg)](https://david-dm.org/wilson428/node-lessify#info=devDependencies)
 
-LESS 2.0 precompiler and CSS plugin for Browserify. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify).
+LESS 2.0 precompiler and CSS plugin for Browserify. Inspired by [node-underscorify](https://github.com/maxparm/node-underscorify). Originally developed for TIME Magazine's [interactive deployment framework](https://github.com/TimeMagazine/time-interactive).
 
 When bundling an app using [Browserify](http://browserify.org/), it's often convenient to be able to include your CSS as a script that appends the style declarations to the head. This is particularly relevant for self-assembling apps that attach themselves to a page but otherwise have reserved real-estate on the DOM.
 
