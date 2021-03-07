@@ -28,7 +28,7 @@
     "through2": "^2.0.1"
   },
   "engines": {
-    "node": "*"
+    "node": ">=6"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
